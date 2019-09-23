@@ -1,0 +1,32 @@
+appId: com.example.test.app
+
+mac:
+  artifactName: ${name}-${version}-${os}.${ext}
+  category: public.app-category.wallet
+  target:
+    - dmg
+    - zip
+
+linux:
+  artifactName: ${name}-${version}-${os}-${arch}.${ext}
+  category: Finance
+  target:
+    - target: AppImage
+      arch:
+        - x64
+
+win:
+  artifactName: ${name}-${version}-${os}-${arch}.${ext}
+  certificateSubjectName: Ledger SAS
+  certificateSha1: 7dd9acb2ef0402883c65901ebbafd06e5293d391
+  signingHashAlgorithms:
+    - sha256
+  target:
+    - target: nsis
+      arch:
+        - x64
+
+nsis:
+  oneClick: false
+  perMachine: true
+  allowToChangeInstallationDirectory: true

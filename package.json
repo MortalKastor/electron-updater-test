@@ -1,0 +1,29 @@
+{
+  "name": "electron-updater-test",
+  "productName": "electron-updater test app",
+  "description": "A sample app to test electron-updater",
+  "author": "Thibaut Boustany (@mortalkastor)",
+  "version": "0.0.0",
+  "repository": "https://github.com/MortalKastor/electron-updater-test",
+  "license": "MIT",
+  "scripts": {
+    "dev": "electron-webpack dev",
+    "compile": "electron-webpack",
+    "dist": "yarn compile && electron-builder",
+    "dist:dir": "yarn dist --dir -c.compression=store",
+    "release": "yarn dist -p always"
+  },
+  "dependencies": {
+    "electron-log": "^3.0.8",
+    "electron-updater": "^4.0.0",
+    "source-map-support": "^0.5.13"
+  },
+  "devDependencies": {
+    "electron": "6.0.10",
+    "electron-builder": "^21.2.0",
+    "electron-webpack": "^2.7.4",
+    "eslint": "^6.4.0",
+    "webpack": "~4.40.2"
+  },
+  "private": true
+}
