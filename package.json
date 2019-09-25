@@ -3,7 +3,7 @@
   "productName": "electron-updater test app",
   "description": "A sample app to test electron-updater",
   "author": "Thibaut Boustany (@mortalkastor)",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "repository": "https://github.com/MortalKastor/electron-updater-test",
   "license": "MIT",
   "scripts": {
