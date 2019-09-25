@@ -6,6 +6,7 @@ import log from "electron-log";
 
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = "info";
+autoUpdater.autoInstallOnAppQuit = false;
 log.info("App starting...");
 
 const isDevelopment = process.env.NODE_ENV !== "production";
@@ -15,7 +16,7 @@ let mainWindow;
 
 function createMainWindow() {
   const window = new BrowserWindow({
-    webPreferences: { nodeIntegration: true }
+    webPreferences: { nodeIntegration: true },
   });
 
   if (isDevelopment) {
@@ -29,8 +30,8 @@ function createMainWindow() {
       formatUrl({
         pathname: path.join(__dirname, "index.html"),
         protocol: "file",
-        slashes: true
-      })
+        slashes: true,
+      }),
     );
   }
 
@@ -98,7 +99,7 @@ autoUpdater.on("update-downloaded", () => {
 function sendAppInfo() {
   const info = {
     name: isDevelopment ? process.env.npm_package_productName : app.getName(),
-    version: isDevelopment ? process.env.npm_package_version : app.getVersion()
+    version: isDevelopment ? process.env.npm_package_version : app.getVersion(),
   };
 
   log.info(info);
@@ -112,5 +113,5 @@ app.on("ready", () => {
     sendAppInfo();
   });
   sendAppInfo();
-  autoUpdater.checkForUpdatesAndNotify();
+  autoUpdater.checkForUpdates();
 });
