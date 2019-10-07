@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import * as path from "path";
 import { format as formatUrl } from "url";
 import { autoUpdater } from "electron-updater";
@@ -68,18 +68,23 @@ function sendStatusToWindow(text) {
   log.info(text);
   mainWindow.webContents.send("message", text);
 }
+
 autoUpdater.on("checking-for-update", () => {
   sendStatusToWindow("Checking for update...");
 });
+
 autoUpdater.on("update-available", () => {
   sendStatusToWindow("Update available.");
 });
+
 autoUpdater.on("update-not-available", () => {
   sendStatusToWindow("Update not available.");
 });
+
 autoUpdater.on("error", err => {
   sendStatusToWindow("Error in auto-updater. " + err);
 });
+
 autoUpdater.on("download-progress", progressObj => {
   let log_message = "Download speed: " + progressObj.bytesPerSecond;
   log_message = log_message + " - Downloaded " + progressObj.percent + "%";
@@ -92,10 +97,17 @@ autoUpdater.on("download-progress", progressObj => {
     ")";
   sendStatusToWindow(log_message);
 });
+
 autoUpdater.on("update-downloaded", () => {
   sendStatusToWindow("Update downloaded");
 });
 
+// Wait for event from renderer to quit and install
+ipcMain.on("quit-and-install", () => {
+  autoUpdater.quitAndInstall();
+});
+
+// This info is only available from main thread
 function sendAppInfo() {
   const info = {
     name: isDevelopment ? process.env.npm_package_productName : app.getName(),
@@ -109,9 +121,11 @@ function sendAppInfo() {
 // create main BrowserWindow when electron is ready
 app.on("ready", () => {
   mainWindow = createMainWindow();
+
+  // Wait for the renderer to finish loading DOM and send general info to display
   mainWindow.webContents.once("dom-ready", () => {
     sendAppInfo();
   });
-  sendAppInfo();
-  autoUpdater.checkForUpdates();
+
+  autoUpdater.checkForUpdatesAndNotify();
 });
